@@ -1,0 +1,112 @@
+﻿@model Website.Models.LinkModel
+
+@{
+    ViewBag.Title = "Shared Files";
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2 data-bind="text: fileSetName">@Model.FileSetName</h2>
+            </hgroup>
+            <p>
+                @if (@Model.Files.Count() == 1){
+                <mark>Click the file below to start the download.</mark>
+                } else {                
+                <mark>There are @Model.Files.Count() files in this share.</mark>
+                <span>Clicking on a file will start downloading it.</span>
+                }
+            </p>
+        </div>
+    </section>
+}
+
+<div data-bind="visible: passwordInputVisible">
+    <label for="password">Password:</label>
+    <input type="password" id="password" data-bind="value: password" />
+    <input type="button" value="Next" data-bind="click: onValidatePasswordClicked"/>
+</div>
+
+<section data-bind="visible: downloadVisible">    
+
+    <form action="@Url.Action("Upload")" id="dropzone" class="dropzone" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="ShareToken" data-bind="value: shareToken" />
+        <input type="hidden" name="Password" data-bind="value: password" />
+        <div class="message" data-bind="visible: allowUpload() && !fallback()">Drop files to upload (or click)</div>
+        <div class="fallback" data-bind="visible: allowUpload">
+            <input name="file" type="file" multiple="multiple" id="fallback-input">            
+        </div>
+        <div data-bind="foreach: files">
+            <div class="preview image-preview">
+                <div class="details clickable" data-bind="attr: { title: fileName }, click: $root.download">
+                    <span class="filename" data-bind="text: fileName"></span>
+                    <span class="size" data-bind="text: length"></span>
+                    <img src="@Url.Content("~/images/trans.gif")" alt="Thumb" data-bind="attr: {src: thumbUrl}" />
+                </div>
+            </div>
+        </div>        
+    </form>
+
+</section>
+
+@section styles {
+    <link href="@Url.Content("~/content/dropzone2.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/content/uploadify.css")" rel="stylesheet" type="text/css" />
+}
+
+@section scripts{
+    <script type="text/javascript" src="@Url.Content("~/scripts/dropzone.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.uploadify-3.1.js")"></script>    
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/appscripts")
+    
+
+    <script type="text/javascript">
+        var data = @Html.Raw(Json.Encode(Model));
+
+        var viewModel = new corn.LinkModel({
+            baseUrl: '@Url.Action("Index")'},
+            data
+        );
+
+        ko.applyBindings(viewModel);
+
+        Dropzone.options.dropzone = {
+            maxFilesize: 2048, // MB,
+            enqueueForUpload: true,
+            init: function() {
+                if (!viewModel.allowUpload() || (viewModel.passwordIsRequired && !viewModel.passwordIsValid())){
+                    this.disable();
+                }
+                viewModel.uploaderProxy = new corn.DropZoneWrapper(this);
+                viewModel.controlsEnabled(true);
+            },
+            success: function(){
+                viewModel.refresh();
+            },
+            fallback: function(){
+                viewModel.uploaderProxy = new corn.UploadifyWrapper(null, {
+                    removeOnSuccess: false
+                });
+                viewModel.fallback(true);
+                viewModel.controlsEnabled(true);
+                $('#fallback-input').uploadify({
+                    'swf': '@Url.Content("~/Content/uploadify.swf")',
+                    'uploader': '@Url.Action("Upload")',
+                    'formData': {"ShareToken": '@Model.ShareToken', "IsFlashRequest": "1"}, 
+                    'height': 30,
+                    'width': 120,
+                    'fileSizeLimit': 2097152, //KB
+                    'removeCompleted': false,                    
+                    'buttonText': "Select Files",
+                    'auto': true,
+                    'queueID': "dropzone"
+                });
+            },
+        };
+        
+    </script>
+
+}

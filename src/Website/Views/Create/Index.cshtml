@@ -1,0 +1,184 @@
+﻿@model Website.Models.ShareCreateModel
+@{
+    ViewBag.Title = "Share";
+}
+
+<section data-bind="visible: (viewIndex()===0)">
+
+    <h2>Create a Share.</h2>
+
+    @if (!Model.IsNew){
+    <div class="notice">
+        This is a previous file share you uploaded files to but never shared. @Html.ActionLink("Abandon it","Abandon", new {id=Model.FileSetID}) if you want to start over.
+    </div>
+    }
+
+    <input id="fileSetName" type="text" data-bind="value: name" />
+
+    <form action="@Url.Action("Upload")" id="dropzone" class="dropzone" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="FileSetID" value="@Model.FileSetID" />
+        <div class="message" data-bind="visible: !fallback()">Drop files here to upload (or click)</div>
+        <div class="fallback">
+            <input name="file" type="file" multiple="multiple" id="fallback-input">            
+        </div>
+        @foreach (var file in Model.Files)
+        {<div class="preview image-preview" title="@file.Filename">
+            <div class="details">
+                <span class="filename">@file.Filename</span>
+                <span class="size">@file.Length</span>
+                <img src="@Url.Action("Thumb", new { id = file.FileID })" alt="Thumb" />
+            </div>
+        </div>}       
+    </form>
+
+    <div class="options">
+        <div class="option">
+            <label for="expirationDate">The share and all files will expire after</label>
+            <span data-bind="text: expirationDate, visible: !changeExpirationDate()"></span>
+            <span data-bind="visible: !changeExpirationDate(), click: onChangeExpirationDateClicked" class="clickable">[change]</span>            
+            <input type="text" id="expirationDate" class="datepicker" data-bind="value: expirationDate, visible: changeExpirationDate"/>
+        </div>
+        <div class="option">
+            <input type="checkbox" id="requirePassword" data-bind="checked: requirePassword" />
+            <label class="checkbox" for="requirePassword">Require a password to access the share.</label>
+            <input type="text" data-bind="value: password, visible: requirePassword" />
+        </div>
+        <div class="option">
+            <input type="checkbox" id="allowUpload" data-bind="checked: allowUpload" />
+            <label class="checkbox" for="allowUpload">Allow uploads to the share.</label>            
+        </div>          
+    </div>
+
+    <div class="buttons">
+        <input type="button" name="shareButton" id="shareButton" value="Share" data-bind="click: onShareClicked, enable: isShareEnabled"/>                
+    </div>
+</section>
+
+<section data-bind="visible: (viewIndex()===1)">
+    <h2>All Done!</h2>
+
+    <h3>Use this link to provide access the entire share</h3>
+
+    <div class="set-link">
+        <div class="url">
+            <a href="javascript:" class="email-button" data-bind="click: onCreateEmailClicked">Email</a>            
+            <input type="text" data-bind="value: generatedLinks.fileSet" readonly="readonly" />
+        </div>        
+    </div>
+
+    <div data-bind="visible: generatedLinks.files().length > 0">
+        
+        <h3>Use these links to provide access to individual files.</h3>
+
+        <p data-bind="visible: allowUpload">
+            People with these links will not be able to upload files.
+        </p>
+
+        <ul class="file-links" data-bind="foreach: generatedLinks.files">
+            <li>
+                <span class="filename" data-bind="text: fileName"></span>
+                <div class="url">
+                    <a href="javascript:" class="email-button" data-bind="click: $root.onCreateEmailClicked">Email</a>                    
+                    <input type="text" data-bind="value: url" readonly="readonly" />
+                </div>
+            </li>
+        </ul>
+
+    </div>
+
+    <p>
+        @Html.ActionLink("Create Another Share", "Index")
+    </p>
+</section>
+
+<section id="email" class="email" data-bind="modalIsVisible: emailVisible">
+    <div><label for="emailFrom">From</label></div>
+    <div><input type="text" id="emailFrom" data-bind="value: emailMessage.emailFrom"/></div>
+    
+    <div><label for="emailFrom">To</label></div>
+    <div><input type="text" id="emailTo" data-bind="value: emailMessage.emailTo"/></div>
+    
+    <div><label for="emailBody">Message</label></div>
+    <div><textarea id="emailBody" data-bind="value: emailMessage.emailBody"></textarea></div>
+    <p>The link and instructions for using it will be included below the message.</p>
+        
+    <input type="button" value="Send" data-bind="click: onSendEmailClicked" />
+    <a href="javascript:" data-bind="click: cancelEmailClicked">Cancel</a>
+</section>
+    
+@section styles {
+    <link href="@Url.Content("~/content/dropzone2.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/content/uploadify.css")" rel="stylesheet" type="text/css" />
+}
+
+@section scripts {    
+    <script type="text/javascript" src="@Url.Content("~/scripts/dropzone.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.simplemodal.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/scripts/jquery.uploadify-3.1.js")"></script>
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/appscripts")
+    
+    <script type="text/javascript">
+      
+        var viewModel = new corn.ShareModel({
+            fileSetID: @Model.FileSetID,
+            name: '@Model.Name',
+            createLinksUrl: '@Url.Action("Links")',
+            sendEmail: "@Url.Action("SendEmail")",
+            fileCount: @Model.Files.Count()
+        });
+
+        ko.applyBindings(viewModel);
+        
+        Dropzone.options.dropzone = {
+            maxFilesize: 2048, // MB,
+            enqueueForUpload: true,
+            thumbnailWidth: 200,
+            thumbnailHeight: 200,
+            init: function() {                
+                viewModel.uploaderProxy = new corn.DropZoneWrapper(this, {
+                    removeOnSuccess: false
+                });
+                viewModel.controlsEnabled(true);
+            },
+            fallback: function(){
+                viewModel.uploaderProxy = new corn.UploadifyWrapper(null, {
+                    removeOnSuccess: false
+                });
+                viewModel.fallback(true);
+                viewModel.controlsEnabled(true);
+                $('#fallback-input').uploadify({
+                    'swf': '@Url.Content("~/Content/uploadify.swf")',
+                    'uploader': '@Url.Action("Upload")',
+                    'onUploadSuccess': function(){
+                        viewModel.uploadedFileCount(viewModel.uploadedFileCount()+1);
+                    },
+                    'onQueueComplete': function(file) {
+                        viewModel.controlsEnabled(true);
+                    },
+                    'formData': {"FileSetID": @Model.FileSetID, "IsFlashRequest": "1"}, 
+                    'height': 30,
+                    'width': 120,
+                    'fileSizeLimit': 2097152, //KB
+                    'removeCompleted': false,                    
+                    'buttonText': "Select Files",
+                    'auto': true,
+                    'queueID': "dropzone"
+                });
+            },
+            sending: function() {
+                viewModel.controlsEnabled(false);
+            },
+            complete: function() {
+                viewModel.uploadedFileCount(viewModel.uploadedFileCount()+1);
+                if (this.filesProcessing.length===0){
+                    viewModel.controlsEnabled(true);
+                }
+            }
+        };
+        
+        $(document).on('click','.url input[type=text]',function () {
+            $(this).select();
+        });
+    </script>
+}

@@ -1,0 +1,207 @@
+﻿.dropzone,
+.dropzone *,
+.dropzone-previews,
+.dropzone-previews *
+{
+}
+
+.dropzone
+{
+    position: relative;
+    min-height: 200px;
+    max-height: 500px;    
+	overflow: auto;
+    padding: 1em;    
+    background: #fff;        
+    border: 2px dotted #6cac23;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;    
+}
+
+    .dropzone.clickable
+    {
+        cursor: pointer;
+    }
+	
+	.dropzone.clickable .message
+    {
+        cursor: pointer;
+    }
+
+    .dropzone .message
+    {
+        font-size: 2.0em;
+		text-align: center;
+        opacity: 1;
+		margin-bottom: 0.5em;
+    }
+
+	.dropzone.drag-hover
+    {
+        border-color: #F00;
+        background: #0F0;
+    }
+		
+    /*.dropzone.started .message
+    {
+        display: none;
+    }*/
+
+	.dropzone .preview
+    {
+        position: relative;
+        font-size: 12px;
+        display: inline-block;
+        margin: 4px;
+		padding: 3px;
+		background-color: #6cac23;
+        vertical-align: top;
+		width: 175px;
+        height: 75px;
+		cursor: default;
+		overflow: hidden;
+    }
+
+	.dropzone .preview .details
+    {
+        position: relative;
+        padding: 0;
+		color: #fff;
+		-webkit-text-shadow: 1px 1px 4px #000;
+		text-shadow: 1px 1px 4px #000;
+		font-size: 12px;
+    }
+
+	.dropzone .preview .details .filename
+	{
+		position: absolute;
+		left: 0;
+		right: 0;
+		color: #fff;
+		display: block;
+		overflow: hidden;
+		white-space: nowrap;
+		z-index: 20;
+	}
+
+	.dropzone .preview .details .size {
+		position: absolute;
+		top: 1.2em;
+		left: 0;
+		right: 0;
+		z-index: 20;
+	}
+
+	.dropzone .preview .details .size strong{
+		font-weight: normal;
+	}
+
+	.dropzone .preview .details img
+    {
+        position: absolute;
+        top: -60px;
+        left: -12px;
+        width: 200px;
+        height: 200px;		
+		z-index: 10;
+    }
+
+	.dropzone .preview.error .details img
+	{
+		display:none;
+	}
+
+	.dropzone .preview.image-preview:hover .details img
+    {
+        opacity: 0.1;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=10)";
+        filter: alpha(opacity=10);
+    }
+
+	.dropzone .preview.error:hover .details {
+		display:none;
+	}
+
+	.dropzone .preview .progress
+    {
+        position: absolute;
+		z-index: 30;
+        bottom: 5px;
+        right: 6px;
+        left: 6px;
+        display: none;
+        height: 6px;
+        background: #d7d7d7;
+    }
+
+    .dropzone .preview .progress .upload
+	{
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: 0%;
+		background-color: #FFCC66;
+	}
+
+	.dropzone .preview.processing .progress
+    {
+        display: block;
+    }
+
+	.dropzone .preview.success .progress,
+	.dropzone .preview.error .progress
+	{
+		display: none;
+	}
+	
+	.dropzone .preview .error-mark,
+    .dropzone .preview .success-mark
+    {
+		position: absolute;
+		z-index: 40;
+		bottom: 2px;
+		right: 2px;
+		width: 22px;
+		height: 22px;
+        display: block;        
+        background-repeat: no-repeat;
+        opacity: 0;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        filter: alpha(opacity=0);
+        -moz-transition: opacity 0.4s ease-in-out;
+        -ms-transition: opacity 0.4s ease-in-out;
+        -o-transition: opacity 0.4s ease-in-out;
+        -webkit-transition: opacity 0.4s ease-in-out;
+        transition: opacity 0.4s ease-in-out;
+    }
+
+	.dropzone .preview .success-mark
+	{
+		background-image: url(../images/green-check.png);
+	}
+
+	.dropzone .preview .error-mark
+	{
+		background-image: url(../images/red-x.png);
+	}
+
+	.dropzone .preview .success-mark span,
+	.dropzone .preview .error-mark span
+	{
+		display:none;
+	}
+
+	.dropzone .preview.success .success-mark,
+	.dropzone .preview.error .error-mark
+    {
+        opacity: 1;
+        -ms-filter: none;
+        filter: none;
+    }
+
+	.dropzone .error-message {
+		font-size: 0.80em;
+	}
+		
+	

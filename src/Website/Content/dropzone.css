@@ -1,0 +1,511 @@
+﻿/* The MIT License */
+.dropzone,
+.dropzone *,
+.dropzone-previews,
+.dropzone-previews *
+{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.dropzone
+{
+    position: relative;
+    overflow: auto;
+    padding: 1em;    
+    min-height: 200px;
+    max-height: 500px;    
+    background: rgba(0,0,0,0.02);        
+    border: 2px dashed #6cac23;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;    
+}
+
+    .dropzone.clickable
+    {
+        cursor: pointer;
+    }
+
+        .dropzone.clickable .message
+        {
+            cursor: pointer;
+        }
+
+        .dropzone.clickable *
+        {
+            cursor: default;
+        }
+
+    .dropzone .message
+    {
+        font-size: 2.0em;
+        opacity: 1;
+        -ms-filter: none;
+        filter: none;
+    }
+
+    .dropzone.drag-hover
+    {
+        border-color: rgba(0,0,0,0.15);
+        background: rgba(0,0,0,0.04);
+    }
+
+    .dropzone.started .message
+    {
+        display: none;
+    }
+
+    .dropzone .preview,
+    .dropzone-previews .preview
+    {
+        position: relative;
+        display: inline-block;
+        margin: 3px;
+        /*padding: 6px 6px 6px 6px;*/
+        border: 1px solid #acacac;
+        background: rgba(255,255,255,0.8);
+        vertical-align: top;
+    }
+
+        .dropzone .preview .details,
+        .dropzone-previews .preview .details
+        {
+            position: relative;
+            margin-bottom: 22px;
+            padding: 5px;
+            width: 175px;
+            height: 75px;
+            background: #ebebeb;
+        }
+
+            .dropzone .preview .details .filename,
+            .dropzone-previews .preview .details .filename
+            {
+                overflow: hidden;
+                height: 100%;
+            }
+
+            .dropzone .preview .details img,
+            .dropzone-previews .preview .details img
+            {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 175px;
+                height: 75px;
+            }
+
+            .dropzone .preview .details .size,
+            .dropzone-previews .preview .details .size
+            {
+                position: absolute;
+                bottom: -28px;
+                left: 3px;
+                height: 28px;
+                line-height: 28px;
+            }
+
+        .dropzone .preview.error .error-mark,
+        .dropzone-previews .preview.error .error-mark
+        {
+            display: block;
+        }
+
+        .dropzone .preview.success .success-mark,
+        .dropzone-previews .preview.success .success-mark
+        {
+            display: block;
+        }
+
+        .dropzone .preview:hover .details img,
+        .dropzone-previews .preview:hover .details img
+        {
+            display: none;
+        }
+
+        .dropzone .preview:hover .success-mark,
+        .dropzone-previews .preview:hover .success-mark,
+        .dropzone .preview:hover .error-mark,
+        .dropzone-previews .preview:hover .error-mark
+        {
+            display: none;
+        }
+
+        .dropzone .preview .success-mark,
+        .dropzone-previews .preview .success-mark,
+        .dropzone .preview .error-mark,
+        .dropzone-previews .preview .error-mark
+        {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            display: none;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .dropzone .preview .success-mark,
+        .dropzone-previews .preview .success-mark
+        {
+            color: #8cc657;
+        }
+
+        .dropzone .preview .error-mark,
+        .dropzone-previews .preview .error-mark
+        {
+            color: #ee162d;
+        }
+
+        .dropzone .preview .progress,
+        .dropzone-previews .preview .progress
+        {
+            position: absolute;
+            top: 100px;
+            right: 6px;
+            left: 6px;
+            display: none;
+            height: 6px;
+            background: #d7d7d7;
+        }
+
+            .dropzone .preview .progress .upload,
+            .dropzone-previews .preview .progress .upload
+            {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: 0%;
+                background-color: #8cc657;
+            }
+
+        .dropzone .preview.processing .progress,
+        .dropzone-previews .preview.processing .progress
+        {
+            display: block;
+        }
+
+        .dropzone .preview .error-message,
+        .dropzone-previews .preview .error-message
+        {
+            position: absolute;
+            top: -5px;
+            left: -20px;
+            z-index: 500;
+            display: none;
+            padding: 8px 10px;
+            min-width: 140px;
+            max-width: 500px;
+            background: rgba(245,245,245,0.8);
+            color: #800;
+        }
+
+        .dropzone .preview:hover.error .error-message,
+        .dropzone-previews .preview:hover.error .error-message
+        {
+            display: block;
+        }
+
+    .dropzone .default.message
+    {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -61.5px;
+        margin-left: -214px;
+        width: 428px;
+        height: 123px;
+        background-image: url("../images/spritemap.png");
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        opacity: 1;
+        -ms-filter: none;
+        filter: none;
+        -moz-transition: opacity 0.3s ease-in-out;
+        -ms-transition: opacity 0.3s ease-in-out;
+        -o-transition: opacity 0.3s ease-in-out;
+        -webkit-transition: opacity 0.3s ease-in-out;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+@media all and (-webkit-min-device-pixel-ratio: 1.5)
+{
+    .dropzone .default.message
+    {
+        background-image: url("../images/spritemap@2x.png");
+        -moz-background-size: 428px 406px;
+        -o-background-size: 428px 406px;
+        -webkit-background-size: 428px 406px;
+        background-size: 428px 406px;
+    }
+}
+
+.dropzone .default.message span
+{
+    display: none;
+}
+
+.dropzone.square .default.message
+{
+    margin-top: -87px;
+    margin-left: -134px;
+    width: 268px;
+    height: 174px;
+    background-position: 0 -123px;
+}
+
+.dropzone.drag-hover .message
+{
+    opacity: 0.15;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=15)";
+    filter: alpha(opacity=15);
+}
+
+.dropzone.started .message
+{
+    display: block;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+}
+
+.dropzone .preview,
+.dropzone-previews .preview
+{
+    /*-webkit-box-shadow: 1px 1px 4px rgba(0,0,0,0.16);
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.16);*/
+    font-size: 10px;
+}
+
+    .dropzone .preview .details img,
+    .dropzone-previews .preview .details img
+    {
+        width: 175px;
+        height: 75px;
+    }
+
+    .dropzone .preview.image-preview:hover .details img,
+    .dropzone-previews .preview.image-preview:hover .details img
+    {
+        display: block;
+        opacity: 0.1;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=10)";
+        filter: alpha(opacity=10);
+    }
+
+    .dropzone .preview.success .success-mark,
+    .dropzone-previews .preview.success .success-mark
+    {
+        opacity: 1;
+        -ms-filter: none;
+        filter: none;
+    }
+
+    .dropzone .preview.error .error-mark,
+    .dropzone-previews .preview.error .error-mark
+    {
+        opacity: 1;
+        -ms-filter: none;
+        filter: none;
+    }
+
+    .dropzone .preview.error .progress .upload,
+    .dropzone-previews .preview.error .progress .upload
+    {
+        background: #ee1e2d;
+    }
+
+    .dropzone .preview .error-mark,
+    .dropzone-previews .preview .error-mark,
+    .dropzone .preview .success-mark,
+    .dropzone-previews .preview .success-mark
+    {
+        display: block;
+        background-image: url("../images/spritemap.png");
+        background-repeat: no-repeat;
+        opacity: 0;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+        filter: alpha(opacity=0);
+        -moz-transition: opacity 0.4s ease-in-out;
+        -ms-transition: opacity 0.4s ease-in-out;
+        -o-transition: opacity 0.4s ease-in-out;
+        -webkit-transition: opacity 0.4s ease-in-out;
+        transition: opacity 0.4s ease-in-out;
+    }
+
+@media all and (-webkit-min-device-pixel-ratio: 1.5)
+{
+    .dropzone .preview .error-mark,
+    .dropzone-previews .preview .error-mark,
+    .dropzone .preview .success-mark,
+    .dropzone-previews .preview .success-mark
+    {
+        background-image: url("../images/spritemap@2x.png");
+        -moz-background-size: 428px 406px;
+        -o-background-size: 428px 406px;
+        -webkit-background-size: 428px 406px;
+        background-size: 428px 406px;
+    }
+}
+
+.dropzone .preview .error-mark span,
+.dropzone-previews .preview .error-mark span,
+.dropzone .preview .success-mark span,
+.dropzone-previews .preview .success-mark span
+{
+    display: none;
+}
+
+.dropzone .preview .error-mark,
+.dropzone-previews .preview .error-mark
+{
+    background-position: -268px -123px;
+}
+
+.dropzone .preview .success-mark,
+.dropzone-previews .preview .success-mark
+{
+    background-position: -268px -163px;
+}
+
+.dropzone .preview .progress .upload,
+.dropzone-previews .preview .progress .upload
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    background-image: url("../images/spritemap.png");
+    background-position: 0px -400px;
+    background-repeat: repeat-x;
+    -moz-transition: width 0.3s ease-in-out;
+    -ms-transition: width 0.3s ease-in-out;
+    -o-transition: width 0.3s ease-in-out;
+    -webkit-transition: width 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out;
+    -moz-animation: loading 0.4s linear infinite;
+    -ms-animation: loading 0.4s linear infinite;
+    -o-animation: loading 0.4s linear infinite;
+    -webkit-animation: loading 0.4s linear infinite;
+    animation: loading 0.4s linear infinite;
+}
+
+@media all and (-webkit-min-device-pixel-ratio: 1.5)
+{
+    .dropzone .preview .progress .upload,
+    .dropzone-previews .preview .progress .upload
+    {
+        background-image: url("../images/spritemap@2x.png");
+        -moz-background-size: 428px 406px;
+        -o-background-size: 428px 406px;
+        -webkit-background-size: 428px 406px;
+        background-size: 428px 406px;
+    }
+}
+
+.dropzone .preview.success .progress,
+.dropzone-previews .preview.success .progress
+{
+    display: block;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -moz-transition: opacity 0.4s ease-in-out;
+    -ms-transition: opacity 0.4s ease-in-out;
+    -o-transition: opacity 0.4s ease-in-out;
+    -webkit-transition: opacity 0.4s ease-in-out;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.dropzone .preview .error-message,
+.dropzone-previews .preview .error-message
+{
+    display: block;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -moz-transition: opacity 0.3s ease-in-out;
+    -ms-transition: opacity 0.3s ease-in-out;
+    -o-transition: opacity 0.3s ease-in-out;
+    -webkit-transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.dropzone .preview:hover.error .error-message,
+.dropzone-previews .preview:hover.error .error-message
+{
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+}
+
+@-moz-keyframes loading
+{
+    0%
+    {
+        background-position: 0 -400px;
+    }
+
+    100%
+    {
+        background-position: -7px -400px;
+    }
+}
+
+@-webkit-keyframes loading
+{
+    0%
+    {
+        background-position: 0 -400px;
+    }
+
+    100%
+    {
+        background-position: -7px -400px;
+    }
+}
+
+@-o-keyframes loading
+{
+    0%
+    {
+        background-position: 0 -400px;
+    }
+
+    100%
+    {
+        background-position: -7px -400px;
+    }
+}
+
+@-ms-keyframes loading
+{
+    0%
+    {
+        background-position: 0 -400px;
+    }
+
+    100%
+    {
+        background-position: -7px -400px;
+    }
+}
+
+@keyframes loading
+{
+    0%
+    {
+        background-position: 0 -400px;
+    }
+
+    100%
+    {
+        background-position: -7px -400px;
+    }
+}
